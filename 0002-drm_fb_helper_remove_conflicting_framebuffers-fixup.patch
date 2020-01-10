@@ -1,0 +1,28 @@
+Reverting a change introduced in 6de7e7f8b3698 "[drm] upstream sync to v4.10"
+(upstream c470abd4fde40ea).
+Index: src/drivers/gpu/drm/mgag200/mgag200_drv.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_drv.c	2017-06-09 15:24:20.259565585 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_drv.c	2017-06-09 15:24:53.266191785 +0200
+@@ -60,7 +60,7 @@
+ #ifdef CONFIG_X86
+ 	primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+ #endif
+-	drm_fb_helper_remove_conflicting_framebuffers(ap, "mgag200drmfb", primary);
++	remove_conflicting_framebuffers(ap, "mgag200drmfb", primary);
+ 	kfree(ap);
+ }
+ 
+Index: src/drivers/gpu/drm/mgag200/mgag200_main.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_main.c	2017-06-09 15:24:53.230192192 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_main.c	2017-06-09 15:25:49.516554749 +0200
+@@ -137,7 +137,7 @@
+ 	aper->ranges[0].base = mdev->mc.vram_base;
+ 	aper->ranges[0].size = mdev->mc.vram_window;
+ 
+-	drm_fb_helper_remove_conflicting_framebuffers(aper, "mgafb", true);
++	remove_conflicting_framebuffers(aper, "mgafb", true);
+ 	kfree(aper);
+ 
+ 	if (!devm_request_mem_region(mdev->dev->dev, mdev->mc.vram_base, mdev->mc.vram_window,

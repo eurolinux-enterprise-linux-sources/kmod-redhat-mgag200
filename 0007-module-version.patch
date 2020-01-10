@@ -1,0 +1,13 @@
+Adding module version in order to be able to identify driver in use.
+
+Using (upstream) kernel version driver's code from as a driver version.
+
+Index: src/drivers/gpu/drm/mgag200/mgag200_drv.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_drv.c	2017-06-20 20:40:30.541976989 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_drv.c	2017-06-20 20:40:49.310698789 +0200
+@@ -145,3 +145,4 @@
+ MODULE_AUTHOR(DRIVER_AUTHOR);
+ MODULE_DESCRIPTION(DRIVER_DESC);
+ MODULE_LICENSE("GPL");
++MODULE_VERSION("4.11.0_dup7.3");

@@ -1,0 +1,37 @@
+Reverting a change introduced in 6de7e7f8b3698 "[drm] upstream sync to v4.10"
+(upstream c470abd4fde40ea).
+Index: src/drivers/gpu/drm/mgag200/mgag200_main.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_main.c	2017-06-09 15:41:00.280046938 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_main.c	2017-06-09 15:42:10.346236732 +0200
+@@ -55,7 +55,7 @@
+ 	struct mga_framebuffer *mga_fb;
+ 	int ret;
+ 
+-	obj = drm_gem_object_lookup(filp, mode_cmd->handles[0]);
++	obj = drm_gem_object_lookup(dev, filp, mode_cmd->handles[0]);
+ 	if (obj == NULL)
+ 		return ERR_PTR(-ENOENT);
+ 
+@@ -364,7 +364,7 @@
+ 	struct drm_gem_object *obj;
+ 	struct mgag200_bo *bo;
+ 
+-	obj = drm_gem_object_lookup(file, handle);
++	obj = drm_gem_object_lookup(dev, file, handle);
+ 	if (obj == NULL)
+ 		return -ENOENT;
+ 
+Index: src/drivers/gpu/drm/mgag200/mgag200_cursor.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_cursor.c	2017-06-09 15:07:22.093162348 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_cursor.c	2017-06-09 15:42:35.759942862 +0200
+@@ -75,7 +75,7 @@
+ 		return 0;
+ 	}
+ 
+-	obj = drm_gem_object_lookup(file_priv, handle);
++	obj = drm_gem_object_lookup(dev, file_priv, handle);
+ 	if (!obj)
+ 		return -ENOENT;
+ 

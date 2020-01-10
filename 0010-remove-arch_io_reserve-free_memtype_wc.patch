@@ -1,0 +1,32 @@
+Reverting a change introduced in 6de7e7f8b3698 "[drm] upstream sync to v4.10"
+(upstream c470abd4fde40ea).
+
+Index: src/drivers/gpu/drm/mgag200/mgag200_ttm.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_ttm.c	2017-06-20 20:40:53.018643824 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_ttm.c	2017-06-20 20:40:54.786617618 +0200
+@@ -274,9 +274,6 @@
+ 		return ret;
+ 	}
+ 
+-	arch_io_reserve_memtype_wc(pci_resource_start(dev->pdev, 0),
+-				   pci_resource_len(dev->pdev, 0));
+-
+ 	mdev->fb_mtrr = arch_phys_wc_add(pci_resource_start(dev->pdev, 0),
+ 					 pci_resource_len(dev->pdev, 0));
+ 
+@@ -285,14 +282,10 @@
+ 
+ void mgag200_mm_fini(struct mga_device *mdev)
+ {
+-	struct drm_device *dev = mdev->dev;
+-
+ 	ttm_bo_device_release(&mdev->ttm.bdev);
+ 
+ 	mgag200_ttm_global_release(mdev);
+ 
+-	arch_io_free_memtype_wc(pci_resource_start(dev->pdev, 0),
+-				pci_resource_len(dev->pdev, 0));
+ 	arch_phys_wc_del(mdev->fb_mtrr);
+ 	mdev->fb_mtrr = 0;
+ }

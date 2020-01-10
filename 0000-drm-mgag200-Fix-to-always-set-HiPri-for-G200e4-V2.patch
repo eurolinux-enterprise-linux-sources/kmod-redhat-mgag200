@@ -1,0 +1,66 @@
+From df9d3b2f13d96f30cd49caa634387d49e8a9d2b8 Mon Sep 17 00:00:00 2001
+From: Rob Clark <rclark@redhat.com>
+Date: Fri, 16 Jun 2017 00:04:07 -0400
+Subject: [PATCH] [drm] mgag200: Fix to always set HiPri for G200e4 V2
+
+Message-id: <20170616000407.30823-1-rclark@redhat.com>
+Patchwork-id: 179792
+O-Subject: [RHEL7 drm] drm/mgag200: Fix to always set HiPri for G200e4 V2
+Bugzilla: 1461985
+RH-Acked-by: Jeremy McNicoll <jmcnicol@redhat.com>
+RH-Acked-by: Dave Airlie <airlied@redhat.com>
+
+Upstream: drm-misc-fixes-2017-06-15
+RHBZ: https://bugzilla.redhat.com/show_bug.cgi?id=1461985
+Brew: https://brewweb.engineering.redhat.com/brew/taskinfo?taskID=13446539
+
+commit 426f719e7f1619c5f1b11c3f17a31f97956f5c3a
+
+Author:     Mathieu Larouche <mathieu.larouche@matrox.com>
+AuthorDate: Wed Jun 14 10:34:11 2017 -0400
+Commit:     Rob Clark <rclark@redhat.com>
+CommitDate: Thu Jun 15 16:55:04 2017 -0400
+
+    drm/mgag200: Fix to always set HiPri for G200e4 V2
+
+      - Changed the HiPri value for G200e4 to always be 0.
+      - Added Bandwith limitation to block resolution above 1920x1200x60Hz
+
+    Signed-off-by: Mathieu Larouche <mathieu.larouche@matrox.com>
+
+Signed-off-by: Rob Clark <rclark@redhat.com>
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
+---
+ drivers/gpu/drm/mgag200/mgag200_mode.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/mgag200/mgag200_mode.c b/drivers/gpu/drm/mgag200/mgag200_mode.c
+index 83b80ee..dcdb4fc 100644
+--- a/drivers/gpu/drm/mgag200/mgag200_mode.c
++++ b/drivers/gpu/drm/mgag200/mgag200_mode.c
+@@ -1172,7 +1172,10 @@ static int mga_crtc_mode_set(struct drm_crtc *crtc,
+ 
+ 
+ 	if (IS_G200_SE(mdev)) {
+-		if (mdev->unique_rev_id >= 0x02) {
++		if  (mdev->unique_rev_id >= 0x04) {
++			WREG8(MGAREG_CRTCEXT_INDEX, 0x06);
++			WREG8(MGAREG_CRTCEXT_DATA, 0);
++		} else if (mdev->unique_rev_id >= 0x02) {
+ 			u8 hi_pri_lvl;
+ 			u32 bpp;
+ 			u32 mb;
+@@ -1637,6 +1640,10 @@ static int mga_vga_mode_valid(struct drm_connector *connector,
+ 			if (mga_vga_calculate_mode_bandwidth(mode, bpp)
+ 				> (30100 * 1024))
+ 				return MODE_BANDWIDTH;
++		} else {
++			if (mga_vga_calculate_mode_bandwidth(mode, bpp) 
++				> (55000 * 1024)) 
++				return MODE_BANDWIDTH;
+ 		}
+ 	} else if (mdev->type == G200_WB) {
+ 		if (mode->hdisplay > 1280)
+-- 
+2.9.3
+

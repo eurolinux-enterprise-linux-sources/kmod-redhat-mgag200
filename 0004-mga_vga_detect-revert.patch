@@ -1,0 +1,28 @@
+Reverting a change introduced in 6de7e7f8b3698 "[drm] upstream sync to v4.10"
+(upstream c470abd4fde40ea).
+
+Index: src/drivers/gpu/drm/mgag200/mgag200_mode.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_mode.c	2017-06-20 20:40:39.610842564 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_mode.c	2017-06-20 20:40:43.294787960 +0200
+@@ -1703,6 +1703,12 @@
+ 	return NULL;
+ }
+ 
++static enum drm_connector_status mga_vga_detect(struct drm_connector
++						*connector, bool force)
++{
++	return connector_status_connected;
++}
++
+ static void mga_connector_destroy(struct drm_connector *connector)
+ {
+ 	struct mga_connector *mga_connector = to_mga_connector(connector);
+@@ -1719,6 +1725,7 @@
+ 
+ static const struct drm_connector_funcs mga_vga_connector_funcs = {
+ 	.dpms = drm_helper_connector_dpms,
++	.detect = mga_vga_detect,
+ 	.fill_modes = drm_helper_probe_single_connector_modes,
+ 	.destroy = mga_connector_destroy,
+ };

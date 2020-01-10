@@ -1,0 +1,15 @@
+Reverting a change introduced in 6de7e7f8b3698 "[drm] upstream sync to v4.10"
+(upstream c470abd4fde40ea).
+Index: src/drivers/gpu/drm/mgag200/mgag200_drv.h
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_drv.h	2017-06-09 15:07:22.093162348 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_drv.h	2017-06-09 15:19:29.234861443 +0200
+@@ -282,7 +282,7 @@
+ {
+ 	int ret;
+ 
+-	ret = ttm_bo_reserve(&bo->bo, true, no_wait, NULL);
++	ret = ttm_bo_reserve(&bo->bo, true, no_wait, false, NULL);
+ 	if (ret) {
+ 		if (ret != -ERESTARTSYS && ret != -EBUSY)
+ 			DRM_ERROR("reserve failed %p\n", bo);

@@ -1,0 +1,16 @@
+Reverting a change introduced in 6de7e7f8b3698 "[drm] upstream sync to v4.10"
+(upstream c470abd4fde40ea).
+
+Index: src/drivers/gpu/drm/mgag200/mgag200_drv.c
+===================================================================
+--- src.orig/drivers/gpu/drm/mgag200/mgag200_drv.c	2017-06-20 20:40:49.310698789 +0200
++++ src/drivers/gpu/drm/mgag200/mgag200_drv.c	2017-06-20 20:40:51.234670270 +0200
+@@ -103,7 +103,7 @@
+ 	.minor = DRIVER_MINOR,
+ 	.patchlevel = DRIVER_PATCHLEVEL,
+ 
+-	.gem_free_object_unlocked = mgag200_gem_free_object,
++	.gem_free_object = mgag200_gem_free_object,
+ 	.dumb_create = mgag200_dumb_create,
+ 	.dumb_map_offset = mgag200_dumb_mmap_offset,
+ 	.dumb_destroy = drm_gem_dumb_destroy,
